@@ -2,53 +2,67 @@ package com.example.threewinsgame.Model;
 //package com.example.smallcalculations.BuildConfig;
 
 import com.example.threewinsgame.BuildConfig;
-
+//todo decide if version numbers are set in gradle or here
+//todo make grade output the same string as filename
 
 public class VersionControl {
 
     //edit manually:
-    private final int major = 1;
-    private final int minor = 0;
+    private final int major = 0;
+    private final int minor = 1;
     private final int patch = 0;
-    private final boolean isSnapshot = false;
-    private final String comment = "firstVersioningTry";
+    private final boolean labelSnapshot = false;
+    private String snapSuffix = "pre-"; //add minus after suffix e.g. "beta-"
+    private String comment = "-firstVersioningTry"; //add minus before comment e.g. "-addedLanguageOption"
     private final boolean useComment = false;
 
     //inserted automatically
     BuildConfig buildConfig = new BuildConfig();
     private final int formattedDate = buildConfig.formattedDate;
     private final int formattedTime = buildConfig.formattedTime;
+    /*todo minSdkVersion 16
+    todo get Screen Sizes or GL Texture Format*/
+    private final int minSdkVersion = 16;
+    private final int screenSize = 0;
 
 
     public VersionControl() {
-
     }
 
     public int getVersionCode() {
-        return 10000;
-        //its recommended to include the API and the target resolution type, I don't do that because
-        //I want to learn basic versioning that is generally applied to all languages.
-        //Just getting doubts, because every language and API maybe needs individual versioning...
+        int versionCode =
+                minSdkVersion * 10000000 +
+                screenSize * 100000 +
+                major * 10000 +
+                minor * 100 +
+                patch;
+        return versionCode;
+        //its suggested from a external android dev to include the API and the target resolution type
+        // every language and API maybe needs individual versioning...
+        //
+        // For example, when the application version name is 3.1.0, the version
+        // code for a minimum API level 4 APK would be something like 040030100.
+        // The first two digits are reserved for the minimum API Level (4 in this case),
+        // the third digit is for either screen sizes or GL texture formats (not used in this
+        // example, so a 0 is assigned), and the last six digits are for the application’s version
+        // name (3.1.0).
+        // https://medium.com/@maxirosson/versioning-android-apps-d6ec171cfd82
     }
 
     public String getVersionString() {
-        String suffix = "";
-        if (isSnapshot) suffix = "pre-";
-        String comment = "";
-        if (useComment) comment="-"+this.comment;
+        if (!labelSnapshot) snapSuffix = "";
+        if (!useComment) comment= "";
+
         String version =
                 Integer.toString(major) + "." +
                 Integer.toString(minor) + "." +
                 Integer.toString(patch) + "-" +
-                suffix +
+                snapSuffix +
                 Integer.toString(formattedDate) + "." +
                 Integer.toString(formattedTime) +
                 comment;
 
-
-
         //return "1.0.0-snap-20190304.2038-withSpice";
-
         return version;
     }
 }
@@ -76,12 +90,8 @@ gradle script:
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField "int", "FOO", "52"
         }
         debug{
-            buildConfigField "int", "FOO", "52"
-
             //def dateX = new Date().format("dd-MM-yyyy-hh-mm-ss")
             //buildConfigField "String", "buildDateTry", dateX
             def date = new Date()
