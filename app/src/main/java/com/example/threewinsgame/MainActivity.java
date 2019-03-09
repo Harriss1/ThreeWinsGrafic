@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.threewinsgame.Model.ThreeWins;
+import com.example.threewinsgame.ViewModel.DisplayableGame;
+import com.example.threewinsgame.ViewModel.VersionControlVM;
 import com.example.threewinsgame.ViewModel.ViewModel;
 import com.example.threewinsgame.ViewModel.ThreeWinsVM;
 
@@ -16,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView a1, a2, a3, b1, b2, b3, c1, c2, c3;
     ThreeWinsVM gameVM = new ThreeWinsVM();
+    VersionControlVM versionVM = new VersionControlVM();
 
 
 
@@ -39,12 +43,15 @@ public class MainActivity extends AppCompatActivity {
         c2 = (TextView)findViewById(R.id.c2);
         c3 = (TextView)findViewById(R.id.c3);
 
+
         final Button btA1 = (Button) findViewById(R.id.a1);
 
         btA1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                a1.setText("O");
                 gameVM.setMove(1,3);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -54,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(2,3);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -63,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(3,3);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -72,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(1,2);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -81,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(2,2);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -90,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(3, 2);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -99,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(1,1);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -108,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(2,1);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -117,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameVM.setMove(3,1);
+                updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
             }
         });
@@ -142,5 +157,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateGameView(DisplayableGame gameView){
+
+        TextView debug = (TextView)findViewById(R.id.debug);
+        String text="debug: ";
+        text += gameView.fieldFilledWith;
+        text += " - xy="+ Integer.toString(gameView.x) + Integer.toString(gameView.y);
+        debug.setText(text);
+
+        if (gameView.x==1 && gameView.y==3) a1.setText(gameView.fieldFilledWith);
+        if (gameView.x==2 && gameView.y==3) a2.setText(gameView.fieldFilledWith);
+        if (gameView.x==3 && gameView.y==3) a3.setText(gameView.fieldFilledWith);
+
+        if (gameView.x==1 && gameView.y==2) b1.setText(gameView.fieldFilledWith);
+        if (gameView.x==2 && gameView.y==2) b2.setText(gameView.fieldFilledWith);
+        if (gameView.x==3 && gameView.y==2) b3.setText(gameView.fieldFilledWith);
+
+        if (gameView.x==1 && gameView.y==1) c1.setText(gameView.fieldFilledWith);
+        if (gameView.x==2 && gameView.y==1) c2.setText(gameView.fieldFilledWith);
+        if (gameView.x==3 && gameView.y==1) c3.setText(gameView.fieldFilledWith);
+
+        TextView userHint = (TextView) findViewById(R.id.userHint);
+        userHint.setText(gameView.userHint);
+        TextView userErrorHint = (TextView) findViewById(R.id.userErrorHint);
+        userErrorHint.setText(gameView.userErrorHint);
     }
 }
