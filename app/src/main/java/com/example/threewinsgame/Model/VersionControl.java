@@ -1,5 +1,4 @@
 package com.example.threewinsgame.Model;
-//package com.example.smallcalculations.BuildConfig;
 
 import com.example.threewinsgame.BuildConfig;
 //todo decide if version numbers are set in gradle or here
@@ -11,8 +10,8 @@ public class VersionControl {
     private final int major = 0;
     private final int minor = 1;
     private final int patch = 0;
-    private final boolean labelSnapshot = false;
-    private String snapSuffix = "pre-"; //add minus after suffix e.g. "beta-"
+    private final boolean labelSnapshot = true;
+    private String snapSuffix = "alpha-"; //add minus after suffix e.g. "beta-"
     private String comment = "-firstVersioningTry"; //add minus before comment e.g. "-addedLanguageOption"
     private final boolean useComment = false;
 
