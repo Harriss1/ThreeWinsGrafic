@@ -1,6 +1,5 @@
 package com.example.threewinsgame.ViewModel;
 import com.example.threewinsgame.Model.ThreeWins;
-import com.example.threewinsgame.ViewModel.DisplayableGame;
 
 public class ThreeWinsVM extends ViewModel {
 
@@ -15,19 +14,19 @@ public class ThreeWinsVM extends ViewModel {
     }
     public DisplayableGame getGameView(){
         DisplayableGame viewUpdate = new DisplayableGame();
+
         viewUpdate.x=game.getDataUpdates().x;
         viewUpdate.y=game.getDataUpdates().y;
         viewUpdate.userErrorHint=game.getDataUpdates().userErrorHint;
         viewUpdate.userHint=game.getDataUpdates().userHint;
-        if(game.getDataUpdates().filledWith==0){
-            viewUpdate.fieldFilledWith="";
-
-        } else {
-            if (game.getDataUpdates().filledWith==1) viewUpdate.fieldFilledWith="X";
-            else viewUpdate.fieldFilledWith="O";
-        }
+        viewUpdate.fieldFilledWith=game.getDataUpdates().filledWith;
+        viewUpdate.debugOut=game.getDataUpdates().debugOut;
+        viewUpdate.setAllToEmpty=game.getDataUpdates().resetAllFields;
 
         return viewUpdate;
+    }
+    public void setReset(){
+        game.resetGame();
     }
 
 }

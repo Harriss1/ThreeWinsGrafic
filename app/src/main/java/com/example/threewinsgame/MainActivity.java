@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+
         a1 = (TextView)findViewById(R.id.a1);
         a2 = (TextView)findViewById(R.id.a2);
         a3 = (TextView)findViewById(R.id.a3);
@@ -43,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
         c2 = (TextView)findViewById(R.id.c2);
         c3 = (TextView)findViewById(R.id.c3);
 
+        updateGameView(gameVM.getGameView());
+
+        final Button reset = (Button) findViewById(R.id.reset);
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameVM.setReset();
+                updateGameView(gameVM.getGameView());
+            }
+        });
 
         final Button btA1 = (Button) findViewById(R.id.a1);
 
@@ -161,27 +174,52 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateGameView(DisplayableGame gameView){
 
-        TextView debug = (TextView)findViewById(R.id.debug);
-        String text="debug: ";
-        text += gameView.fieldFilledWith;
-        text += " - xy="+ Integer.toString(gameView.x) + Integer.toString(gameView.y);
-        debug.setText(text);
+        if (false) {
+            TextView debug = (TextView) findViewById(R.id.debug);
 
-        if (gameView.x==1 && gameView.y==3) a1.setText(gameView.fieldFilledWith);
-        if (gameView.x==2 && gameView.y==3) a2.setText(gameView.fieldFilledWith);
-        if (gameView.x==3 && gameView.y==3) a3.setText(gameView.fieldFilledWith);
-
-        if (gameView.x==1 && gameView.y==2) b1.setText(gameView.fieldFilledWith);
-        if (gameView.x==2 && gameView.y==2) b2.setText(gameView.fieldFilledWith);
-        if (gameView.x==3 && gameView.y==2) b3.setText(gameView.fieldFilledWith);
-
-        if (gameView.x==1 && gameView.y==1) c1.setText(gameView.fieldFilledWith);
-        if (gameView.x==2 && gameView.y==1) c2.setText(gameView.fieldFilledWith);
-        if (gameView.x==3 && gameView.y==1) c3.setText(gameView.fieldFilledWith);
+            String text = "debug: ";
+            text += gameView.fieldFilledWith;
+            text += " - xy=" + Integer.toString(gameView.x) + Integer.toString(gameView.y);
+            text += gameView.debugOut;
+            debug.setText(text);
+        }
+        updateField(gameView.x,gameView.y,gameView);
 
         TextView userHint = (TextView) findViewById(R.id.userHint);
         userHint.setText(gameView.userHint);
         TextView userErrorHint = (TextView) findViewById(R.id.userErrorHint);
         userErrorHint.setText(gameView.userErrorHint);
+    }
+    public void updateField(int x, int y, DisplayableGame gameView){
+        if (!gameView.setAllToEmpty) {
+            //a3.setText("test");
+            //a3.setText(Integer.toString(gameView.x)+Integer.toString(gameView.y)+gameView.fieldFilledWith);
+            if (x == 1 && y == 3) a1.setText(gameView.fieldFilledWith);
+            if (x == 2 && y == 3) a2.setText(gameView.fieldFilledWith);
+            if (x == 3 && y == 3) a3.setText(gameView.fieldFilledWith);
+
+            if (x == 1 && y == 2) b1.setText(gameView.fieldFilledWith);
+            if (x == 2 && y == 2) b2.setText(gameView.fieldFilledWith);
+            if (x == 3 && y == 2) b3.setText(gameView.fieldFilledWith);
+
+            if (x == 1 && y == 1) c1.setText(gameView.fieldFilledWith);
+            if (x == 2 && y == 1) c2.setText(gameView.fieldFilledWith);
+            if (x == 3 && y == 1) c3.setText(gameView.fieldFilledWith);
+        }else{
+            String zeroText;//=gameView.fieldFilledWith;
+            zeroText=" ";
+            a1.setText(zeroText);
+            a2.setText(zeroText);
+            a3.setText(zeroText);
+
+            b1.setText(zeroText);
+            b2.setText(zeroText);
+            b3.setText(zeroText);
+
+            c1.setText(zeroText);
+            c2.setText(zeroText);
+            c3.setText(zeroText);
+            //a2.setText("2t");
+        }
     }
 }
