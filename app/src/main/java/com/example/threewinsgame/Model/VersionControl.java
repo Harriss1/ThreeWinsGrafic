@@ -24,6 +24,7 @@ import com.example.threewinsgame.BuildConfig;
 // if the internal version was 0.17.1345 and a patch was 0.17.134602 then the next public version
 // MUST be labelled 0.17.1347 NOT 0.17.1346 no matter what (!)
 // have a different string for the mod-api or only change it with incrementing releases
+//
 
 public class VersionControl {
 
@@ -36,7 +37,7 @@ public class VersionControl {
     private String comment = "-firstVersioningTry"; //add minus before comment e.g. "-addedLanguageOption"
     private final boolean useComment = false;
     private final int pubMajor=0; //stays zero as long as its not finished or early access version
-    private final int pubMinor=1; //this is the bit that increases if there are a lot of changes
+    private final int pubMinor=1; //this is the bit that increases if there are a lot of visible changes
     private final boolean isRelease=false; //adds a -dev suffix and prints timestamp
     //todo: get dev from gradle? (no, not needed)
 
