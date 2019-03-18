@@ -8,12 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.threewinsgame.Model.ThreeWins;
 import com.example.threewinsgame.ViewModel.DisplayableGame;
 import com.example.threewinsgame.ViewModel.VersionControlVM;
 import com.example.threewinsgame.ViewModel.ViewModel;
 import com.example.threewinsgame.ViewModel.ThreeWinsVM;
+import com.example.threewinsgame.Model.VersionControl;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         btA1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                a1.setText("O");
                 gameVM.setMove(1,3);
                 updateGameView(gameVM.getGameView());
                 //gameConnector.setMove(1,1);
@@ -164,8 +165,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+
+        if (id == R.id.action_about){
+            VersionControl v = new VersionControl();
+            String version = v.getVersionString();
+            Toast.makeText(MainActivity.this, ("From Karl Klotz. Build version: "+version), Toast.LENGTH_LONG).show();
             return true;
         }
 

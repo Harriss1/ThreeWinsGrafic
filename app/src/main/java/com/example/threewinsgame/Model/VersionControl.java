@@ -2,16 +2,37 @@ package com.example.threewinsgame.Model;
 
 import com.example.threewinsgame.BuildConfig;
 //todo decide if version numbers are set in gradle or here
-//todo make grade output the same string as filename
+//todo make gradle output the same string as filename
 
 public class VersionControl {
 
     //edit manually:
-    private final int major = 0;
-    private final int minor = 1;
+    private final int major = 1;
+    private final int minor = 0;
     private final int patch = 0;
     private final boolean labelSnapshot = true;
     private String snapSuffix = "alpha-"; //add minus after suffix e.g. "beta-"
+    //todo suffix for labelling dev-versions?//
+    // patches are for inside changes and bug fixes that are meant to be released
+    // .dev01 are for new versions that are not meant to be released? no that doesn't work, because
+    // sometimes dev versions would make minor or even major changes.
+    //todo but how do I keep the public from recognising more than one version change?
+    // I don't want them to know "hey I made 10 versions of the UI until I released the next patch
+    // and went from 1.04.02-stable over 1.05.00-dev to 1.15.04-stable ... (stable=release)
+    // If I have no API there is no need to document versions, and I can only document with date stamps?
+    // I don't want my users to think about new versions when they use my app. Except for where changes
+    // matter and requires the user to learn new stuff! That's the case in games. But you always can
+    // for example use Youtube without knowing any changes to it. And the web API fields are documented
+    // separately.
+
+    //Todo alright here is the solution:
+    // do it as in Rimworld: alpha versions leading with 0.
+    // public string before internal version string: 0.17.1345 - the patch string stays hidden
+    // public versions are NEVER incrementing the patch code part
+    // if the internal version was 0.17.1345 and a patch was 0.17.134602 then the next public version
+    // MUST be labelled 0.17.1347 NOT 0.17.1346 no matter what (!)
+    // have a different string for the mod-api or only change it with incrementing releases
+
     private String comment = "-firstVersioningTry"; //add minus before comment e.g. "-addedLanguageOption"
     private final boolean useComment = false;
 
@@ -63,6 +84,8 @@ public class VersionControl {
 
         //return "1.0.0-snap-20190304.2038-withSpice";
         return version;
+
+        // return 
     }
 }
 
