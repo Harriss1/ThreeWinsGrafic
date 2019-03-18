@@ -36,7 +36,7 @@ public class VersionControl {
     private String comment = "-firstVersioningTry"; //add minus before comment e.g. "-addedLanguageOption"
     private final boolean useComment = false;
     private final int pubMajor=0; //stays zero as long as its not finished or early access version
-    private final int pubMinor=1; //this is the bit that increases if there are a lot of changes
+    private final int pubMinor=1; //this is the bit that increases if there are a lot of visible changes
     private final boolean isRelease=false; //adds a -dev suffix and prints timestamp
     //todo: get dev from gradle? (no, not needed)
 
