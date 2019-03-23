@@ -25,6 +25,7 @@ import com.example.threewinsgame.BuildConfig;
 // MUST be labelled 0.17.1347 NOT 0.17.1346 no matter what (!)
 // have a different string for the mod-api or only change it with incrementing releases
 //
+// 24.03.2019: lets see if this merges into main!
 
 public class VersionControl {
 
