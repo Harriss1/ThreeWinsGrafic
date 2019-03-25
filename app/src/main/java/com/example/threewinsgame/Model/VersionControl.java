@@ -27,6 +27,8 @@ import com.example.threewinsgame.BuildConfig;
 //
 // 24.03.2019: lets see if this merges into main!
 
+//26.03.19: didnt i delete git account in extzernal ide from torbens pc?
+
 public class VersionControl {
 
     //edit manually:
