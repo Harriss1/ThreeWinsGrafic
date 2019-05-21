@@ -1,5 +1,8 @@
 package com.example.threewinsgame;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,17 +14,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.threewinsgame.Model.ThreeWins;
+import com.example.threewinsgame.View.ExternalOnClickListener;
 import com.example.threewinsgame.ViewModel.DisplayableGame;
 import com.example.threewinsgame.ViewModel.VersionControlVM;
 import com.example.threewinsgame.ViewModel.ViewModel;
 import com.example.threewinsgame.ViewModel.ThreeWinsVM;
 import com.example.threewinsgame.Model.VersionControl;
+import android.widget.ImageView;
+import com.example.threewinsgame.View.TestView;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView a1, a2, a3, b1, b2, b3, c1, c2, c3;
     ThreeWinsVM gameVM = new ThreeWinsVM();
     VersionControlVM versionVM = new VersionControlVM();
+    ImageView testImg;
+    boolean debugSwitch = true;
+    int debugTemp1=0;
+    String debugTemp1label="undefTemp1";
+    int debugTemp2=0;
+    String debugTemp2label="undefTemp2";
+
+
+
+
+
 
 
 
@@ -33,11 +50,67 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //test Image button to change o-image
+        //deprecated code?
+
+        View v = getLayoutInflater().inflate(R.layout.activity_main, null);
+        setContentView(v);
+        ExternalOnClickListener nac = new ExternalOnClickListener(MainActivity.this, v);
+        nac.test();
+
+        testImg = (ImageView)findViewById(R.id.imageView);
+        final Button testImgBtn = (Button)findViewById(R.id.imgtestbtn);
+        testImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                // String test = getResources().getResourceEntryName(R.drawable.btn_olabel);
+                /*
+                int testImgID1 = testImg.getId();
+                int testImgID2 = getResources().getIdentifier("btn_xlabel", "drawable", getPackageName());
+
+                if (testImgID2==testImgID1){
+                    testImg.setImageResource(R.drawable.btn_xlabel);
+                } else
+                {
+                    testImg.setImageResource(R.drawable.btn_olabel);
+                }
+
+
+                debugTemp1label="testImgId1=";
+                debugTemp2label="testImgId2=";
+                debugTemp1=testImgID1;
+                debugTemp2=testImgID2;
+                */
+                String xlabelTag="xlabel";
+                String olabelTag="olabel";
+                //testImg.setTag(xlabelTag);
+                if (testImg.getTag().equals(xlabelTag)){
+                    testImg.setTag(olabelTag);
+                    testImg.setImageResource(R.drawable.btn_olabel);
+                } else if (testImg.getTag().equals(olabelTag)) {
+                    testImg.setTag(xlabelTag);
+                    testImg.setImageResource(R.drawable.btn_xlabel);
+                }
+
+
+                /* deprecated code!
+                if(testImg.getDrawable().getCurrent()==
+                        (getResources().getDrawable(R.drawable.btn_xlabel)).getCurrent()){
+                    testImg.setImageResource(R.drawable.btn_olabel);
+                } else testImg.setImageResource(R.drawable.btn_xlabel);
+                */
+            }
+        });
+
+
 
 
 
         a1 = (TextView)findViewById(R.id.a1);
-        a2 = (TextView)findViewById(R.id.a2);
+       // a2 = (TextView)findViewById(R.id.a2);
         a3 = (TextView)findViewById(R.id.a3);
 
         b1 = (TextView)findViewById(R.id.b1);
@@ -66,9 +139,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 gameVM.setMove(1,3);
                 updateGameView(gameVM.getGameView());
+                ImageView test2Img=(ImageView)findViewById(R.id.gridImgAreaA1);
+                test2Img.setImageResource(R.drawable.btn_olabel);
+
+                TestView testView = new TestView(MainActivity.this);
+                testView.Update();
                 //gameConnector.setMove(1,1);
             }
         });
+      /*
         final Button btA2 = (Button) findViewById(R.id.a2);
 
         btA2.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 //gameConnector.setMove(1,1);
             }
         });
+        */
         final Button btA3 = (Button) findViewById(R.id.a3);
 
         btA3.setOnClickListener(new View.OnClickListener() {
@@ -178,13 +258,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateGameView(DisplayableGame gameView){
 
-        if (false) {
+        if (debugSwitch) {
             TextView debug = (TextView) findViewById(R.id.debug);
 
             String text = "debug: ";
+            text += debugTemp1label + String.valueOf(debugTemp1)+"\n";
+            text += debugTemp2label + String.valueOf(debugTemp2)+"\n";
+            /*
             text += gameView.fieldFilledWith;
             text += " - xy=" + Integer.toString(gameView.x) + Integer.toString(gameView.y);
             text += gameView.debugOut;
+            */
             debug.setText(text);
         }
         updateField(gameView.x,gameView.y,gameView);
@@ -199,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             //a3.setText("test");
             //a3.setText(Integer.toString(gameView.x)+Integer.toString(gameView.y)+gameView.fieldFilledWith);
             if (x == 1 && y == 3) a1.setText(gameView.fieldFilledWith);
-            if (x == 2 && y == 3) a2.setText(gameView.fieldFilledWith);
+            //if (x == 2 && y == 3) a2.setText(gameView.fieldFilledWith);
             if (x == 3 && y == 3) a3.setText(gameView.fieldFilledWith);
 
             if (x == 1 && y == 2) b1.setText(gameView.fieldFilledWith);
@@ -213,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
             String zeroText;//=gameView.fieldFilledWith;
             zeroText=" ";
             a1.setText(zeroText);
-            a2.setText(zeroText);
+         //   a2.setText(zeroText);
             a3.setText(zeroText);
 
             b1.setText(zeroText);
