@@ -48,8 +48,8 @@ public class VersionControl {
 
     //inserted automatically
     BuildConfig buildConfig = new BuildConfig();
-    private final int formattedDate = buildConfig.formattedDate;
-    private final int formattedTime = buildConfig.formattedTime;
+    private String formattedDate = buildConfig.formattedDate;
+    private String formattedTime = buildConfig.formattedTime;
     /*todo minSdkVersion 16
     todo get Screen Sizes or GL Texture Format*/
     private final int minSdkVersion = 16;
@@ -96,8 +96,8 @@ public class VersionControl {
                         Integer.toString(minor) + "." +
                         Integer.toString(patch) + "-" +
                         snapSuffix +
-                        Integer.toString(formattedDate) + "." +
-                        Integer.toString(formattedTime) +
+                        formattedDate + "." +
+                        formattedTime +
                         comment;
 
         String version =
@@ -106,8 +106,8 @@ public class VersionControl {
                         Integer.toString(minor) + "." +
                         Integer.toString(patch) + "-" +
                                         snapSuffix +
-                        Integer.toString(formattedDate) + "." +
-                        Integer.toString(formattedTime) +
+                        formattedDate + "." +
+                        formattedTime +
                                         comment;
 
         //return "1.0.0-snap-20190304.2038-withSpice";

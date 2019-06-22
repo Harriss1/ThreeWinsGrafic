@@ -3,6 +3,7 @@ package com.example.threewinsgame.View;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.threewinsgame.R;
@@ -22,7 +23,6 @@ public class ExternalOnClickListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Hello I am inside Non Activity Class",Toast.LENGTH_LONG ).show();
-
             }
         });
     }

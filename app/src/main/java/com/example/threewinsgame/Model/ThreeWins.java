@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class ThreeWins {
 
+    private Logging log = new Logging("ThreeWins.java");
+
     private Grid gameGrid;
 
     private String userHint = "";
@@ -141,6 +143,7 @@ public class ThreeWins {
         gameGrid = new Grid();
         traceString += gameGrid.traceString;
         errorString += gameGrid.errorString;
+        log.setLogMessage("created");
     }
 
     //Interface
