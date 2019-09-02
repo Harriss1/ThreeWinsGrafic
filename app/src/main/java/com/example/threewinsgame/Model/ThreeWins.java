@@ -80,6 +80,181 @@ public class ThreeWins {
                             lastModifiedField.posX + lastModifiedField.posY + lastModifiedField.label+
                             ")";
         }
+        GameSaveContainer gameSaveContainer = new GameSaveContainer();
+
+        class GameSaveContainer{
+
+            ArrayList<SaveValue> saveValues;
+
+            class SaveValue{
+                private int id=0;
+                private String keyName;
+
+                private int valueInt;
+                private String valueStr;
+                private boolean valueBoo;
+
+                public final String varTypeString="String";
+                public final String varTypeInt="Integer";
+                public final String varTypeBool="Boolean";
+                public final String varTypeUndefined="undefined";
+
+                private String variableType=varTypeUndefined;
+
+                private boolean setValue(int id, String keyName){
+                    boolean setupSuccess=false;
+
+                    if(true/*this.id==id-1*/){
+                        this.id++;
+                        this.keyName=keyName;
+                        setupSuccess=true;
+                    } else log.setLogMessage(
+                            "SaveValue: id ("+Integer.toString(id)+ ") is not successor of last id("+Integer.toString(this.id)+")");
+
+                    return setupSuccess;
+                }
+                SaveValue(int id, String keyName, int valueInt){
+                    if (setValue(id, keyName)){
+                        this.valueInt=valueInt;
+                        this.variableType="Integer";
+                    } else log.setLogMessage("SaveValue: Integer ("+Integer.toString(valueInt)+") not set");
+                }
+
+                SaveValue(int id, String keyName, String valueStr){
+                    if (setValue(id, keyName)){
+                        this.valueStr=valueStr;
+                        this.variableType="String";
+                    } else log.setLogMessage("SaveValue: String ("+valueStr+" not set");
+                }
+
+                SaveValue(int id, String keyName, boolean valueBoo){
+                    if (setValue(id, keyName)){
+                        this.valueBoo=valueBoo;
+                        this.variableType="Boolean";
+                    } else log.setLogMessage("SaveValue: Boolean ("+Boolean.toString(valueBoo)+") not set");
+                }
+
+            }
+
+            public int toPositionValueAsInt(Pos pos){
+                int posValueAsInt=10000; //VXXYY(value,xx,yy)
+
+                if (!pos.labelIsSet){
+                    posValueAsInt=10000; //label not set =1
+                    posValueAsInt+=pos.posX*100+pos.posY;
+                } else {
+                    if(pos.label==player1Label) //player1Label=2; player2Label=3;
+                        posValueAsInt=20000+pos.posX*100+pos.posY;
+                    else
+                        posValueAsInt=30000+pos.posX*100+pos.posY;
+                }
+
+                return posValueAsInt;
+            }
+
+            private boolean checkUniqueKeyName(String keyName){
+                boolean isUnique = false;
+
+                for(SaveValue element : saveValues){
+                    if(keyName.equals(element.keyName)){
+                        isUnique=true;
+                    } else {
+                        log.setLogMessage("checkUniqueKeyName(): keyName is not unique");
+                    }
+                }
+
+                return isUnique;
+            }
+
+            private boolean addInteger(String keyName, int value){
+                boolean success=false;
+                SaveValue saveValue = new SaveValue(1, keyName, value);
+
+                if(checkUniqueKeyName(keyName)){
+                    saveValues.add(saveValue);
+                    success = true;
+                } else log.setLogMessage("addInteger(): nothing added");
+
+                return success;
+            }
+
+            private int getInteger(String keyName){
+                for(SaveValue element : saveValues){
+                    if(element.keyName.equals(keyName)){
+                        log.setLogMessage("getInteger: success ("+element.valueInt+")");
+                        return element.valueInt;
+                    }
+                }
+                log.setLogMessage("getInteger: keyName wrong");
+                return 0;
+            }
+
+            public boolean setPosFromInteger(int containerInt){
+                boolean setPositionSuccess=false;
+                int labelidentifier=containerInt/10000;
+                String label;
+                if (labelidentifier==1)label=noLabel;
+                else if (labelidentifier==2) label=player1Label;
+                else if (labelidentifier==3) label=player2Label;
+                else{
+                    log.setLogMessage("setPosFromInteger: integer on the 5th digit from behind wrong(must be 1,2,3)");
+                    return setPositionSuccess;
+                }
+
+                //VXXYY(value,xx,yy)
+                int x=(containerInt-(containerInt/10000)*10000)/100;
+                int stepForY=containerInt-(containerInt/10000)*10000;
+                int y=stepForY-(stepForY/100)*100;
+
+                if(x>=0 && x<=3 && y>=0 && y<=0) {
+                    setLabel(x, y, label);
+                    setPositionSuccess=true;
+                } else log.setLogMessage("setPosFromInteger(): label cords invalid");
+
+                return setPositionSuccess;
+            }
+
+
+            GameSaveContainer(){
+                saveValues=new ArrayList<>();
+            }
+
+            private boolean saveGameState(){
+
+                return false;
+            }
+
+            private boolean saveGridState(Grid grid){
+
+                for(int x=1; x<=3;x++){
+                    for (int y=1; y<=3; y++){
+                        Pos pos = new Pos(x,y);
+                        pos.setField(grid.getLabel(x,y));
+                        SaveValue saveValue = new SaveValue(1,"gridPos"+x+y,toPositionValueAsInt(pos));
+                        saveValues.add(saveValue);
+                    }
+                }
+
+                //value of the positions
+                //10102 = V XX YY  (value(1,2,3),x-cord,y-cord)
+                //SaveValue savePos = new SaveValue(1,"Pos",10203);
+                //saveValues.add(savePos);
+                return false;
+            }
+
+            private boolean resumeGridState(){
+                for (SaveValue element : saveValues){
+                    setPosFromInteger(getInteger(element.keyName));
+                }
+                return false;
+            }
+
+            private boolean resumeGameFromOwnFormat(){
+             resumeGridState();
+             return false;
+            }
+        }
+
 
         boolean setLabel(int x, int y, String label) {
 
@@ -149,6 +324,15 @@ public class ThreeWins {
     //Interface
     public String getWholeGridString(){
         return gameGrid.getGridAsString();
+    }
+
+    public void resumeGame(){
+
+    }
+
+    public void saveGame(){
+        //save all game data as int, string or boolean
+
     }
 
     public class DataUpdates{
