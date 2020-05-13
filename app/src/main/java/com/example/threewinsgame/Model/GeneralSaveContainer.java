@@ -3,9 +3,16 @@ package com.example.threewinsgame.Model;
 import java.util.ArrayList;
 
 
-//supposed to temporarily store data, readAndDelete() puts this data into another Container, here Saveinstance.
+//supposed to temporarily store data, readAndDelete() puts this data into another Container, here SaveInstance.
 //its important to start any counter at zero and not at one to have a unified id scheme.
-//I allways did ArrayList<Integer> list = new ArrayList<Integer> wrong, forgot the second bracket.
+//I always did ArrayList<Integer> list = new ArrayList<Integer> wrong, forgot the second bracket.
+
+//setSaveFormat(SaveRestoreInstanceStateHandler); ->this sets which class is used to save and restore data?
+//example we use a class that saves into Android temp variables, and another which uses files.
+
+//STEP ONE: We make it work in smallest parts!
+//STEP TWO: SaveRestoreInstanceStateHandler will have a function "readAndDeleteContainer(classNameContainer)
+// to store and restore data via restoreDataToContainer(generalSaveContainer).
 
 public class GeneralSaveContainer {
     private Logging log;
@@ -121,7 +128,16 @@ public class GeneralSaveContainer {
     }
 
     public String getEntryTypeStringAt(int id){
+        //if(id<dataEntries.size() && id >=0);
 
+        if(dataEntries.size()>0 && id<dataEntries.size() && id>=0)
+        {
+
+        }else return "getEntryTypeStringAt(id=)"+Integer.toString(id)+"): out of bounds";
+
+        if(dataEntries.get(id).valueStr.isEmpty()){
+            return "getEntryTypeStringAt(id=)"+Integer.toString(id)+"): isEmpty";
+        }
         return dataEntries.get(id).valueStr;
     }
 

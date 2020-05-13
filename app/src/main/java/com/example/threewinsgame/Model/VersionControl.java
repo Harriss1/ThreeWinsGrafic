@@ -87,8 +87,8 @@ public class VersionControl {
         {
             publicVersionIndicator +=
                     Integer.toString(pubMajor)+ "."+
-                    Integer.toString(pubMinor)+ ".";
-            snapSuffix="-dev";
+                    Integer.toString(pubMinor)+ "";
+            snapSuffix="dev";
         } else  snapSuffix ="";
 
         String versionOld =
@@ -102,8 +102,8 @@ public class VersionControl {
 
         String version =
                         publicVersionIndicator + "." +
-                        Integer.toString(major) + "." +
-                        Integer.toString(minor) + "." +
+                        Integer.toString(major) + "" +
+                        Integer.toString(minor) + "" +
                         Integer.toString(patch) + "-" +
                                         snapSuffix +
                         formattedDate + "." +

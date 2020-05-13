@@ -4,13 +4,14 @@ import com.example.threewinsgame.Model.ThreeWins;
 
 public class MainViewModel {
 
+    public MainViewModel(){
+
+    }
+
     private ThreeWins game = new ThreeWins();
 
     private DisplayableView viewContainer = new DisplayableView();
 
-    public MainViewModel(){
-
-    }
 
     public DisplayableView getViewContainer(){
         setDisplayableView();

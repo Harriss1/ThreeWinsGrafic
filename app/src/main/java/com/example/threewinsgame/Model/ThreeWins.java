@@ -80,7 +80,11 @@ public class ThreeWins {
                             lastModifiedField.posX + lastModifiedField.posY + lastModifiedField.label+
                             ")";
         }
+
+        //code I tried to make a saveGame to work with, around march 2019.
+        /*
         GameSaveContainer gameSaveContainer = new GameSaveContainer();
+
 
         class GameSaveContainer{
 
@@ -103,8 +107,9 @@ public class ThreeWins {
 
                 private boolean setValue(int id, String keyName){
                     boolean setupSuccess=false;
+                    //ifthis.id==id-1
 
-                    if(true/*this.id==id-1*/){
+                    if(true){
                         this.id++;
                         this.keyName=keyName;
                         setupSuccess=true;
@@ -224,6 +229,7 @@ public class ThreeWins {
                 return false;
             }
 
+
             private boolean saveGridState(Grid grid){
 
                 for(int x=1; x<=3;x++){
@@ -254,7 +260,7 @@ public class ThreeWins {
              return false;
             }
         }
-
+        */
 
         boolean setLabel(int x, int y, String label) {
 
@@ -319,20 +325,18 @@ public class ThreeWins {
         traceString += gameGrid.traceString;
         errorString += gameGrid.errorString;
         log.setLogMessage("created");
+
+        //Android lifecycle creates classes new in every case there was data loss,
+        // so I only need to check for saved data at class creation
+        checkSavedData();
+        //i must have a saveGameState() function for this to work,
+        // and need to implement it after setMove()
+
     }
 
-    //Interface
+    //Interface: DataUpdates is for listening to only
     public String getWholeGridString(){
         return gameGrid.getGridAsString();
-    }
-
-    public void resumeGame(){
-
-    }
-
-    public void saveGame(){
-        //save all game data as int, string or boolean
-
     }
 
     public class DataUpdates{
@@ -377,6 +381,8 @@ public class ThreeWins {
     }
 
     public void setMove(int x, int y){
+        //we are not making any move if the
+        // game is won or the move is invalid, instead we get an ErrorHint.
         if (checkWin()){
             return;
         }
@@ -397,12 +403,15 @@ public class ThreeWins {
         switchPlayer();
         checkWin();
         userHint="";
+
+        saveGameState();
     }
+
     public void resetGame(){
         userHint="Game has been reset.";
+        userErrorHint="";
         traceString+=gameGrid.traceString;
         gameGrid.resetGrid();
-
     }
 
 
@@ -423,7 +432,7 @@ public class ThreeWins {
         if(!winCheck) winCheck=checkVertical();
 
         if (winCheck){
-            userErrorHint = "Game is won.";
+            userErrorHint = "Game is won. "+checkWhoWins();
         } else userErrorHint = "";
         return winCheck;
     }
@@ -436,14 +445,6 @@ public class ThreeWins {
             isOccupied=true;
         } else userErrorHint ="";
         return isOccupied;
-    }
-
-    private void getUpdatedFields(){
-
-    }
-
-    private void getUpdatedHints(){
-
     }
 
     boolean checkHorizontal(int x){
@@ -491,5 +492,22 @@ public class ThreeWins {
         traceString+="Hor("+testForLR+")";
 
         return false;
+    }
+
+    private String checkWhoWins(){
+        if (playerAtTurn.equals(player2Label))
+        return "Player \""+player1Label+"\" is the winner.";
+        return "Player \""+player2Label+"\" is the winner.";
+    }
+
+    private void checkSavedData(){
+
+    }
+
+    private void saveGameState(){
+        //I use a container that stores all necessary data, and this container can be filled
+        // with a function, this function get's called via checkSavedData...
+        // if this function get's called the UI has to update though... ?
+
     }
 }

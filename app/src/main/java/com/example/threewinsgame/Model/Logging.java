@@ -68,12 +68,16 @@ public class Logging {
     }
 
     public static String getGlobalLogText(){
-        String globalLogText = "Complete Log:\n";
+        String globalLogText =
+                "Complete Log:\n";
 
         for (String logMessage : globalLogArrayList){
             globalLogText += logMessage;
         }
 
+        globalLogText+="\nThis is my first app. I left landscape mode functional, but I am unable to save data, it would require " +
+                "a complete rework of all classes. In the end writing everything new would be faster. Deactivating landscape mode is bad practise" +
+                " because some devices need it.\n";
         return globalLogText;
     }
 

@@ -16,6 +16,8 @@ import com.example.threewinsgame.ViewModel.DisplayableView;
 import com.example.threewinsgame.ViewModel.MainViewModel;
 import com.example.threewinsgame.Model.Logging;
 
+
+
 public class MainView implements View.OnClickListener      {
 
     Context context;
@@ -24,10 +26,15 @@ public class MainView implements View.OnClickListener      {
     String labelTypeX="xLabel";
     String labelTypeO ="oLabel";
     Logging log;
+    boolean showDebugMessageLogInUI;
+
+    helperForOptionsMenu helpOM;
 
     MainViewModel mainViewModel  = new MainViewModel();;
 
     public MainView(Context context, View view, MainActivity activity){
+        helpOM=new helperForOptionsMenu();
+        this.showDebugMessageLogInUI=helpOM.showDebugMessageLogInUI;
         this.activity=activity;
         this.context=context;
         this.view=view;
@@ -83,10 +90,12 @@ public class MainView implements View.OnClickListener      {
         userErrorHint.setText(displayableView.userErrorHint);
 
         TextView debug = (TextView) view.findViewById(R.id.debug);
-        debug.setMovementMethod(new ScrollingMovementMethod());
 
-        if (log.getDeveloperModeSetting())
-        debug.setText(log.getGlobalLogText()+displayableView.debugOut);
+        debug.setMovementMethod(new ScrollingMovementMethod());
+        if(helpOM.showDebugMessageLogInUI) {
+            if (log.getDeveloperModeSetting())
+                debug.setText(log.getGlobalLogText() + displayableView.debugOut);
+        }
     }
 
     private void drawGameGrid(DisplayableView displayableView){
@@ -204,8 +213,8 @@ public class MainView implements View.OnClickListener      {
             public void onClick(View v) {
                 mainViewModel.setInput("A2", "");
                 handleViewUpdate();
-                if (log.getDeveloperModeSetting())
-                    Toast.makeText(context, "Hello I am inside MainView",Toast.LENGTH_LONG ).show();
+                //if (log.getDeveloperModeSetting())
+                //    Toast.makeText(context, "Hello I am inside MainView",Toast.LENGTH_LONG ).show();
             }
         });
         btA3.setOnClickListener(new View.OnClickListener() {
