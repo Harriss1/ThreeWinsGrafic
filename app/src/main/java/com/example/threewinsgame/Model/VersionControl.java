@@ -29,6 +29,8 @@ import com.example.threewinsgame.BuildConfig;
 
 //26.03.19: didnt i delete git account in extzernal ide from torbens pc?
 
+//6.5.19: started working on it again, with image including
+
 public class VersionControl {
 
     //edit manually:
@@ -46,8 +48,8 @@ public class VersionControl {
 
     //inserted automatically
     BuildConfig buildConfig = new BuildConfig();
-    private final int formattedDate = buildConfig.formattedDate;
-    private final int formattedTime = buildConfig.formattedTime;
+    private String formattedDate = buildConfig.formattedDate;
+    private String formattedTime = buildConfig.formattedTime;
     /*todo minSdkVersion 16
     todo get Screen Sizes or GL Texture Format*/
     private final int minSdkVersion = 16;
@@ -85,8 +87,8 @@ public class VersionControl {
         {
             publicVersionIndicator +=
                     Integer.toString(pubMajor)+ "."+
-                    Integer.toString(pubMinor)+ ".";
-            snapSuffix="-dev";
+                    Integer.toString(pubMinor)+ "";
+            snapSuffix="dev";
         } else  snapSuffix ="";
 
         String versionOld =
@@ -94,18 +96,18 @@ public class VersionControl {
                         Integer.toString(minor) + "." +
                         Integer.toString(patch) + "-" +
                         snapSuffix +
-                        Integer.toString(formattedDate) + "." +
-                        Integer.toString(formattedTime) +
+                        formattedDate + "." +
+                        formattedTime +
                         comment;
 
         String version =
                         publicVersionIndicator + "." +
-                        Integer.toString(major) + "." +
-                        Integer.toString(minor) + "." +
+                        Integer.toString(major) + "" +
+                        Integer.toString(minor) + "" +
                         Integer.toString(patch) + "-" +
                                         snapSuffix +
-                        Integer.toString(formattedDate) + "." +
-                        Integer.toString(formattedTime) +
+                        formattedDate + "." +
+                        formattedTime +
                                         comment;
 
         //return "1.0.0-snap-20190304.2038-withSpice";

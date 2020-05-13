@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ThreeWinsGame</string>
     <string name="action_about">About</string>
+    <string name="action_log">Debug Messages</string>
 </resources>

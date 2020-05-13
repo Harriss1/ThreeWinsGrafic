@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class ThreeWins {
 
+    private Logging log = new Logging("ThreeWins.java");
+
     private Grid gameGrid;
 
     private String userHint = "";
@@ -79,6 +81,187 @@ public class ThreeWins {
                             ")";
         }
 
+        //code I tried to make a saveGame to work with, around march 2019.
+        /*
+        GameSaveContainer gameSaveContainer = new GameSaveContainer();
+
+
+        class GameSaveContainer{
+
+            ArrayList<SaveValue> saveValues;
+
+            class SaveValue{
+                private int id=0;
+                private String keyName;
+
+                private int valueInt;
+                private String valueStr;
+                private boolean valueBoo;
+
+                public final String varTypeString="String";
+                public final String varTypeInt="Integer";
+                public final String varTypeBool="Boolean";
+                public final String varTypeUndefined="undefined";
+
+                private String variableType=varTypeUndefined;
+
+                private boolean setValue(int id, String keyName){
+                    boolean setupSuccess=false;
+                    //ifthis.id==id-1
+
+                    if(true){
+                        this.id++;
+                        this.keyName=keyName;
+                        setupSuccess=true;
+                    } else log.setLogMessage(
+                            "SaveValue: id ("+Integer.toString(id)+ ") is not successor of last id("+Integer.toString(this.id)+")");
+
+                    return setupSuccess;
+                }
+                SaveValue(int id, String keyName, int valueInt){
+                    if (setValue(id, keyName)){
+                        this.valueInt=valueInt;
+                        this.variableType="Integer";
+                    } else log.setLogMessage("SaveValue: Integer ("+Integer.toString(valueInt)+") not set");
+                }
+
+                SaveValue(int id, String keyName, String valueStr){
+                    if (setValue(id, keyName)){
+                        this.valueStr=valueStr;
+                        this.variableType="String";
+                    } else log.setLogMessage("SaveValue: String ("+valueStr+" not set");
+                }
+
+                SaveValue(int id, String keyName, boolean valueBoo){
+                    if (setValue(id, keyName)){
+                        this.valueBoo=valueBoo;
+                        this.variableType="Boolean";
+                    } else log.setLogMessage("SaveValue: Boolean ("+Boolean.toString(valueBoo)+") not set");
+                }
+
+            }
+
+            public int toPositionValueAsInt(Pos pos){
+                int posValueAsInt=10000; //VXXYY(value,xx,yy)
+
+                if (!pos.labelIsSet){
+                    posValueAsInt=10000; //label not set =1
+                    posValueAsInt+=pos.posX*100+pos.posY;
+                } else {
+                    if(pos.label==player1Label) //player1Label=2; player2Label=3;
+                        posValueAsInt=20000+pos.posX*100+pos.posY;
+                    else
+                        posValueAsInt=30000+pos.posX*100+pos.posY;
+                }
+
+                return posValueAsInt;
+            }
+
+            private boolean checkUniqueKeyName(String keyName){
+                boolean isUnique = false;
+
+                for(SaveValue element : saveValues){
+                    if(keyName.equals(element.keyName)){
+                        isUnique=true;
+                    } else {
+                        log.setLogMessage("checkUniqueKeyName(): keyName is not unique");
+                    }
+                }
+
+                return isUnique;
+            }
+
+            private boolean addInteger(String keyName, int value){
+                boolean success=false;
+                SaveValue saveValue = new SaveValue(1, keyName, value);
+
+                if(checkUniqueKeyName(keyName)){
+                    saveValues.add(saveValue);
+                    success = true;
+                } else log.setLogMessage("addInteger(): nothing added");
+
+                return success;
+            }
+
+            private int getInteger(String keyName){
+                for(SaveValue element : saveValues){
+                    if(element.keyName.equals(keyName)){
+                        log.setLogMessage("getInteger: success ("+element.valueInt+")");
+                        return element.valueInt;
+                    }
+                }
+                log.setLogMessage("getInteger: keyName wrong");
+                return 0;
+            }
+
+            public boolean setPosFromInteger(int containerInt){
+                boolean setPositionSuccess=false;
+                int labelidentifier=containerInt/10000;
+                String label;
+                if (labelidentifier==1)label=noLabel;
+                else if (labelidentifier==2) label=player1Label;
+                else if (labelidentifier==3) label=player2Label;
+                else{
+                    log.setLogMessage("setPosFromInteger: integer on the 5th digit from behind wrong(must be 1,2,3)");
+                    return setPositionSuccess;
+                }
+
+                //VXXYY(value,xx,yy)
+                int x=(containerInt-(containerInt/10000)*10000)/100;
+                int stepForY=containerInt-(containerInt/10000)*10000;
+                int y=stepForY-(stepForY/100)*100;
+
+                if(x>=0 && x<=3 && y>=0 && y<=0) {
+                    setLabel(x, y, label);
+                    setPositionSuccess=true;
+                } else log.setLogMessage("setPosFromInteger(): label cords invalid");
+
+                return setPositionSuccess;
+            }
+
+
+            GameSaveContainer(){
+                saveValues=new ArrayList<>();
+            }
+
+            private boolean saveGameState(){
+
+                return false;
+            }
+
+
+            private boolean saveGridState(Grid grid){
+
+                for(int x=1; x<=3;x++){
+                    for (int y=1; y<=3; y++){
+                        Pos pos = new Pos(x,y);
+                        pos.setField(grid.getLabel(x,y));
+                        SaveValue saveValue = new SaveValue(1,"gridPos"+x+y,toPositionValueAsInt(pos));
+                        saveValues.add(saveValue);
+                    }
+                }
+
+                //value of the positions
+                //10102 = V XX YY  (value(1,2,3),x-cord,y-cord)
+                //SaveValue savePos = new SaveValue(1,"Pos",10203);
+                //saveValues.add(savePos);
+                return false;
+            }
+
+            private boolean resumeGridState(){
+                for (SaveValue element : saveValues){
+                    setPosFromInteger(getInteger(element.keyName));
+                }
+                return false;
+            }
+
+            private boolean resumeGameFromOwnFormat(){
+             resumeGridState();
+             return false;
+            }
+        }
+        */
+
         boolean setLabel(int x, int y, String label) {
 
             boolean success=false;
@@ -141,9 +324,17 @@ public class ThreeWins {
         gameGrid = new Grid();
         traceString += gameGrid.traceString;
         errorString += gameGrid.errorString;
+        log.setLogMessage("created");
+
+        //Android lifecycle creates classes new in every case there was data loss,
+        // so I only need to check for saved data at class creation
+        checkSavedData();
+        //i must have a saveGameState() function for this to work,
+        // and need to implement it after setMove()
+
     }
 
-    //Interface
+    //Interface: DataUpdates is for listening to only
     public String getWholeGridString(){
         return gameGrid.getGridAsString();
     }
@@ -190,6 +381,8 @@ public class ThreeWins {
     }
 
     public void setMove(int x, int y){
+        //we are not making any move if the
+        // game is won or the move is invalid, instead we get an ErrorHint.
         if (checkWin()){
             return;
         }
@@ -210,12 +403,15 @@ public class ThreeWins {
         switchPlayer();
         checkWin();
         userHint="";
+
+        saveGameState();
     }
+
     public void resetGame(){
         userHint="Game has been reset.";
+        userErrorHint="";
         traceString+=gameGrid.traceString;
         gameGrid.resetGrid();
-
     }
 
 
@@ -236,7 +432,7 @@ public class ThreeWins {
         if(!winCheck) winCheck=checkVertical();
 
         if (winCheck){
-            userErrorHint = "Game is won.";
+            userErrorHint = "Game is won. "+checkWhoWins();
         } else userErrorHint = "";
         return winCheck;
     }
@@ -249,14 +445,6 @@ public class ThreeWins {
             isOccupied=true;
         } else userErrorHint ="";
         return isOccupied;
-    }
-
-    private void getUpdatedFields(){
-
-    }
-
-    private void getUpdatedHints(){
-
     }
 
     boolean checkHorizontal(int x){
@@ -304,5 +492,22 @@ public class ThreeWins {
         traceString+="Hor("+testForLR+")";
 
         return false;
+    }
+
+    private String checkWhoWins(){
+        if (playerAtTurn.equals(player2Label))
+        return "Player \""+player1Label+"\" is the winner.";
+        return "Player \""+player2Label+"\" is the winner.";
+    }
+
+    private void checkSavedData(){
+
+    }
+
+    private void saveGameState(){
+        //I use a container that stores all necessary data, and this container can be filled
+        // with a function, this function get's called via checkSavedData...
+        // if this function get's called the UI has to update though... ?
+
     }
 }

@@ -23,11 +23,13 @@ android {
             //def dateX = new Date().format("dd-MM-yyyy-hh-mm-ss")
             //buildConfigField "String", "buildDateTry", dateX
             def date = new Date()
-            def formattedDate = date.format('yyyyMMdd')
-            def formattedTime = date.format('HHmm')
+            def formattedDate = (date.format('yyyyMMdd').toString())
+            def formattedTime = (date.format('HHmm').toString())
+            def dateString = "\"$formattedDate\""
+            def timeString = "\"$formattedTime\""
 
-            buildConfigField "int", "formattedDate", formattedDate
-            buildConfigField "int", "formattedTime", formattedTime
+            buildConfigField "String", "formattedDate", dateString
+            buildConfigField "String", "formattedTime", timeString
         }
     }
 
@@ -45,6 +47,10 @@ android {
                 output.outputFileName = fileName
             }
         }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 

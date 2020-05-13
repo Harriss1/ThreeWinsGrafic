@@ -2,7 +2,6 @@ package com.example.threewinsgame;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,34 +9,122 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.threewinsgame.Model.ThreeWins;
-import com.example.threewinsgame.ViewModel.DisplayableGame;
-import com.example.threewinsgame.ViewModel.VersionControlVM;
-import com.example.threewinsgame.ViewModel.ViewModel;
-import com.example.threewinsgame.ViewModel.ThreeWinsVM;
+import com.example.threewinsgame.Model.GeneralSaveContainer;
+import com.example.threewinsgame.Model.Logging;
+import com.example.threewinsgame.View.MainView;
 import com.example.threewinsgame.Model.VersionControl;
+import com.example.threewinsgame.ViewModel.SaveRestoreInstanceStateHandler;
+import com.example.threewinsgame.View.helperForOptionsMenu;
 
-public class MainActivity extends AppCompatActivity {
+
+import android.widget.ImageView;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity  {
+
+    SaveRestoreInstanceStateHandler saveRestoreInstanceStateHandler;
+
+    GeneralSaveContainer generalSaveContainer = new GeneralSaveContainer();
 
     TextView a1, a2, a3, b1, b2, b3, c1, c2, c3;
-    ThreeWinsVM gameVM = new ThreeWinsVM();
-    VersionControlVM versionVM = new VersionControlVM();
+
+    helperForOptionsMenu helperForOM;
 
 
+    boolean debugSwitch = true;
+    int debugTemp1=0;
+    String debugTemp1label="undefTemp1";
+    int debugTemp2=0;
+    String debugTemp2label="undefTemp2";
+
+    boolean showDebugMessageLogInUI = false;
+
+    Logging log = new Logging("MainActivity.java");
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        saveRestoreInstanceStateHandler = new SaveRestoreInstanceStateHandler(generalSaveContainer);
+
+        helperForOM=new helperForOptionsMenu();
+        helperForOM.showDebugMessageLogInUI=this.showDebugMessageLogInUI;
+
+        String temp24="";
+        if(savedInstanceState != null){
+
+            temp24 = savedInstanceState.getString("hoho");
+
+            log.setLogMessage("inside if-statement, getString gave temp24 this value:"+temp24);
+
+            saveRestoreInstanceStateHandler.retrieveDataToContainer(savedInstanceState);
+            ArrayList<String> testArrayStrings;
+            testArrayStrings = savedInstanceState.getStringArrayList("stringArrayTestList");
+            String firstEntry = testArrayStrings.get(0);
+
+            log.setLogMessage("###\n###\n###\n###\n ###\n###\n###\n###\n " +
+                    "inside if-statement, first entry="+firstEntry+"" +
+                    "second entry="+testArrayStrings.get(1)+"" +
+                    "size=\""+Integer.toString(testArrayStrings.size())+"\"");
+
+        }
+        //if(temp24.isEmpty())temp24="not set";
+
+        String testString2= generalSaveContainer.getEntryTypeStringAt(0);
+
+        log.setLogMessage("###\n###\n###\n###\n testString2="+testString2);
+
+        log.setLogMessage("getlong gave temp24 this value:"+temp24);
+
+        //setContentView(R.layout.activity_main);
+
+        //I want to use external classes to handle the view
+        View v = getLayoutInflater().inflate(R.layout.activity_main, null);
+        setContentView(v);
+
+        MainView mainView = new MainView(MainActivity.this, v,MainActivity.this);
+        mainView.process();
 
 
+        // ---
+        //testing of new image code; need to draw X or O after clicking onto the test button bottom left
+            boolean imageTestMode= log.getDeveloperModeSetting();
+            imageTestMode=false;
 
+            final Button testImgBtn = (Button)findViewById(R.id.imgtestbtn);
+            ImageView testImg = (ImageView)findViewById(R.id.imageView);
+
+            if (!imageTestMode) {
+                testImgBtn.setVisibility(View.GONE);
+                testImg.setVisibility(View.GONE);
+            }
+            testImgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    ImageView testImg = (ImageView)findViewById(R.id.imageView);
+                    String xlabelTag="xlabel";
+                    String olabelTag="olabel";
+                    boolean testMode = log.getDeveloperModeSetting();
+                    testMode=false;
+                    //testImg.setTag(xlabelTag);
+                    if (testImg.getTag().equals(xlabelTag)){
+                        testImg.setTag(olabelTag);
+                        testImg.setImageResource(R.drawable.btn_olabel);
+                    } else if (testImg.getTag().equals(olabelTag)) {
+                        testImg.setTag(xlabelTag);
+                        testImg.setImageResource(R.drawable.btn_xlabel);
+                    }
+                    if (!testMode)
+                        testImg.setVisibility(View.GONE);
+
+                }
+            });
+        // --- end of image code testing
 
         a1 = (TextView)findViewById(R.id.a1);
-        a2 = (TextView)findViewById(R.id.a2);
+       // a2 = (TextView)findViewById(R.id.a2);
         a3 = (TextView)findViewById(R.id.a3);
 
         b1 = (TextView)findViewById(R.id.b1);
@@ -48,115 +135,64 @@ public class MainActivity extends AppCompatActivity {
         c2 = (TextView)findViewById(R.id.c2);
         c3 = (TextView)findViewById(R.id.c3);
 
-        updateGameView(gameVM.getGameView());
 
-        final Button reset = (Button) findViewById(R.id.reset);
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setReset();
-                updateGameView(gameVM.getGameView());
-            }
-        });
-
-        final Button btA1 = (Button) findViewById(R.id.a1);
-
-        btA1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(1,3);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btA2 = (Button) findViewById(R.id.a2);
-
-        btA2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(2,3);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btA3 = (Button) findViewById(R.id.a3);
-
-        btA3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(3,3);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btB1 = (Button) findViewById(R.id.b1);
-
-        btB1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(1,2);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btB2 = (Button) findViewById(R.id.b2);
-
-        btB2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(2,2);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btB3 = (Button) findViewById(R.id.b3);
-
-        btB3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(3, 2);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btC1 = (Button) findViewById(R.id.c1);
-
-        btC1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(1,1);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btC2 = (Button) findViewById(R.id.c2);
-
-        btC2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(2,1);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
-        final Button btC3 = (Button) findViewById(R.id.c3);
-
-        btC3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameVM.setMove(3,1);
-                updateGameView(gameVM.getGameView());
-                //gameConnector.setMove(1,1);
-            }
-        });
     }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ArrayList<String> testListStrings = new ArrayList<>();
+        testListStrings.add("String1of TestListStrings");
+        testListStrings.add("String2 of TestListStrings,hello my dear");
+
+        outState.putStringArrayList("stringArrayTestList", testListStrings);
+        generalSaveContainer.addDataEntry("entry one", "testVar1String");
+        int temp1 = 243;
+        generalSaveContainer.addDataEntry(temp1, "testVar2Int");
+        boolean temp2 = false;
+        generalSaveContainer.addDataEntry(temp2, "testVar3Bool");
+
+        //remove later, old way of retrieving data package for saving
+        //saveRestoreInstanceStateHandler.setSaveContainer(generalSaveContainer);
+
+        saveRestoreInstanceStateHandler.saveDataEntryTest(generalSaveContainer,outState);
+        saveRestoreInstanceStateHandler.saveAndLockContainer(outState);
+        //I left off here last time:
+        // saveRestoreInstanceStateHandler.saveDataEntryLoopTest(generalSaveContainer,outState);
+        saveRestoreInstanceStateHandler.onSaveInstanceState(outState);
+        log.setLogMessage("onSaveInstanceState called");
+        log.setLogMessage("###\n####\n###################\n" +
+                "###\n####\n###################\n" +
+                "ONSAVEINSTANCESTATE DESTROYS ALL VARIABLES"
+        );
+
+
+        //outState.put();
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        saveRestoreInstanceStateHandler.onRestoreInstanceState(savedInstanceState);
+
+        saveRestoreInstanceStateHandler.restoreDataEntryTest(savedInstanceState);
+        String valStr = "";
+        valStr += generalSaveContainer.getEntryTypeStringAt(0);
+        String keyName = "";
+        keyName += generalSaveContainer.getEntryKeyNameAt(0);
+        log.setLogMessage("onRestoreInstanceSate: restored String? booth should NOT be empty: valStr("+valStr+") keyName("+keyName+")");
+        log.setLogMessage("onRestoreInstanceState called");
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        log.setLogMessage("onCreateOptionsMenu called");
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -164,66 +200,35 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        log.setLogMessage("onOptionsItemSelected called");
 
 
         if (id == R.id.action_about){
             VersionControl v = new VersionControl();
             String version = v.getVersionString();
             Toast.makeText(MainActivity.this, ("From Karl Klotz. Build version: "+version), Toast.LENGTH_LONG).show();
+            log.setLogMessage("condition for R.id.action_about called");
+            return true;
+        }
+        if (id == R.id.action_log){
+
+
+            if(showDebugMessageLogInUI)showDebugMessageLogInUI=false;
+            else showDebugMessageLogInUI=true;
+//            this.showDebugMessageLogInUI =true;
+            helperForOM.showDebugMessageLogInUI=showDebugMessageLogInUI;
+            TextView debug = (TextView) findViewById(R.id.debug);
+            if(showDebugMessageLogInUI){
+                Toast.makeText(MainActivity.this, ("Trace-Log only for developer."), Toast.LENGTH_LONG).show();
+                debug.setText(log.getGlobalLogText());
+            }
+            else debug.setText("");
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateGameView(DisplayableGame gameView){
-
-        if (false) {
-            TextView debug = (TextView) findViewById(R.id.debug);
-
-            String text = "debug: ";
-            text += gameView.fieldFilledWith;
-            text += " - xy=" + Integer.toString(gameView.x) + Integer.toString(gameView.y);
-            text += gameView.debugOut;
-            debug.setText(text);
-        }
-        updateField(gameView.x,gameView.y,gameView);
-
-        TextView userHint = (TextView) findViewById(R.id.userHint);
-        userHint.setText(gameView.userHint);
-        TextView userErrorHint = (TextView) findViewById(R.id.userErrorHint);
-        userErrorHint.setText(gameView.userErrorHint);
-    }
-    public void updateField(int x, int y, DisplayableGame gameView){
-        if (!gameView.setAllToEmpty) {
-            //a3.setText("test");
-            //a3.setText(Integer.toString(gameView.x)+Integer.toString(gameView.y)+gameView.fieldFilledWith);
-            if (x == 1 && y == 3) a1.setText(gameView.fieldFilledWith);
-            if (x == 2 && y == 3) a2.setText(gameView.fieldFilledWith);
-            if (x == 3 && y == 3) a3.setText(gameView.fieldFilledWith);
-
-            if (x == 1 && y == 2) b1.setText(gameView.fieldFilledWith);
-            if (x == 2 && y == 2) b2.setText(gameView.fieldFilledWith);
-            if (x == 3 && y == 2) b3.setText(gameView.fieldFilledWith);
-
-            if (x == 1 && y == 1) c1.setText(gameView.fieldFilledWith);
-            if (x == 2 && y == 1) c2.setText(gameView.fieldFilledWith);
-            if (x == 3 && y == 1) c3.setText(gameView.fieldFilledWith);
-        }else{
-            String zeroText;//=gameView.fieldFilledWith;
-            zeroText=" ";
-            a1.setText(zeroText);
-            a2.setText(zeroText);
-            a3.setText(zeroText);
-
-            b1.setText(zeroText);
-            b2.setText(zeroText);
-            b3.setText(zeroText);
-
-            c1.setText(zeroText);
-            c2.setText(zeroText);
-            c3.setText(zeroText);
-            //a2.setText("2t");
-        }
-    }
 }
